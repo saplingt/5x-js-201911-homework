@@ -119,64 +119,36 @@
     function numCal(num) {
       lastword = result.text().charAt(result.text().length - 1);
 
-      if (calc !== '' && num !== '.') {
+      if (calc !== '' && !['+', '-', '×', '÷', '.'].includes(lastword)) {
         calc = calc + num;
         result.append(num);
-      } else if (calc !== '' && num === '.') {
-        switch (lastword) {
-          case '+':
-          case '-':
-          case '×':
-          case '÷':
-          case '.':
-            break;
-          default:
-            calc = calc + num;
-            result.append(num);
-            break;
-        }
-      } else if (calc === '') {
-        switch (num) {
-          case '0':
-          case '.':
-            break;
-          default:
-            calc = calc + num;
-            result.text(num);
-            break;
-        }
+      } else if (calc === '' && !['0', '.'].includes(num)) {
+        calc = calc + num;
+        result.text(num);
+      }
+    }
+
+    function oTurn(o) {
+      if (o = '×') {
+        return '*';
+      } else if (o === '*') {
+        return '×';
+      } else if (o === '÷') {
+        return '/';
+      } else if (o === '/') {
+        return '÷';
+      } else {
+        return o;
       }
     }
 
     function operatorCal(operator) {
       lastword = result.text().charAt(result.text().length - 1);
 
-      if (calc !== '') {
-        switch (lastword) {
-          case '+':
-          case '-':
-          case '×':
-          case '÷':
-          case '.':
-            break;
-          default:
-            result.append(operator);
+      if (calc !== '' && !['+', '-', '×', '÷', '.'].includes(lastword)) {
 
-            switch (operator) {
-              case '+':
-                calc = calc + '+';
-                break;
-              case '-':
-                calc = calc + '-';
-                break;
-              case '×':
-                calc = calc + '*';
-                break;
-              case '÷':
-                calc = calc + '/';
-                break;
-            }
-        }
+        result.append(operator);
+        calc = calc + oturn(operator);
       }
     }
 
@@ -189,6 +161,11 @@
       }
     }
 
+    function clear() {
+      calc = '';
+      result.text(0);
+    }
+
     $('.nums').on('click', function (e) {
       numCal(e.target.innerText);
     })
@@ -199,44 +176,21 @@
       equalCal();
     })
     $('#ac').on('click', function () {
-      calc = '';
-      result.text(0);
+      clear()
     })
+
     $(document).keydown(function (e) {
-      switch (e.key) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case '.':
-          numCal(e.key);
-          break;
-        case '+':
-        case '-':
-          operatorCal(e.key);
-          break;
-        case '*':
-          operatorCal('×');
-          break;
-        case '/':
-          operatorCal('÷');
-          break;
-        case '=':
-        case 'Enter':
-          equalCal();
-          break;
-        case 'Backspace':
-          calc = '';
-          result.text(0);
-          break;
+      var k = oTurn(e.key)
+      if (!isNaN(k) || k === '.') {
+        numCal(k);
+      } else if (['+', '-', '×', '÷'].includes(k)) {
+        operatorCal(k);
+      } else if (k === '=' || k === 'Enter') {
+        equalCal();
+      } else if (k === 'Backspace') {
+        clear()
       }
-    });
+    })
   </script>
 
 </body>
