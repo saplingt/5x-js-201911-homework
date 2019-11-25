@@ -183,19 +183,9 @@
     function equalCal() {
       lastword = result.text().charAt(result.text().length - 1);
 
-      if (calc !== '') {
-        switch (lastword) {
-          case '+':
-          case '-':
-          case '×':
-          case '÷':
-          case '.':
-            break;
-          default:
-            calc = eval(calc);
-            result.text(calc);
-            break;
-        }
+      if (calc !== '' && !['+', '-', '×', '÷', '.'].includes(lastword)) {
+        calc = eval(calc);
+        result.text(calc);
       }
     }
 
@@ -212,8 +202,7 @@
       calc = '';
       result.text(0);
     })
-    document.addEventListener('keydown', function (e) {
-      console.log(e.key);
+    $(document).keydown(function (e) {
       switch (e.key) {
         case '0':
         case '1':
