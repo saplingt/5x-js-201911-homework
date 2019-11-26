@@ -119,7 +119,10 @@
     function numCal(num) {
       lastword = result.text().charAt(result.text().length - 1);
 
-      if (calc !== '' && !['+', '-', '×', '÷', '.'].includes(lastword)) {
+      if (calc !== '' && calc.indexOf('.') === -1) {
+        calc = calc + num;
+        result.append(num);
+      } else if (calc.indexOf('.') !== -1 && num !== '.') {
         calc = calc + num;
         result.append(num);
       } else if (calc === '' && !['0', '.'].includes(num)) {
@@ -129,7 +132,7 @@
     }
 
     function oTurn(o) {
-      if (o = '×') {
+      if (o === '×') {
         return '*';
       } else if (o === '*') {
         return '×';
@@ -146,9 +149,9 @@
       lastword = result.text().charAt(result.text().length - 1);
 
       if (calc !== '' && !['+', '-', '×', '÷', '.'].includes(lastword)) {
-
+        console.log(oTurn(operator));
         result.append(operator);
-        calc = calc + oturn(operator);
+        calc = calc + oTurn(operator);
       }
     }
 
